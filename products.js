@@ -160,13 +160,15 @@ const products = [
     quantity: 1,
   },
 ];
+const shippingFee = 10;
 
 let smallProducts = [];
 const featuredProductsSection = document.getElementById("featured-products");
 const newArrivalsSection = document.getElementById("new-arrivals");
 const proDetailsSection = document.getElementById("pro-details");
 const shopProductsSection = document.getElementById("shop-products");
-const productQ = document.getElementById("cart-length");
+const tbodyCartItems = document.getElementById("all-cart-items");
+const cartSubtotal = document.getElementById("subtotal");
 
 function getRandomIndex(maxIndex) {
   return Math.floor(Math.random() * maxIndex);
@@ -330,11 +332,29 @@ const changeMainImg = () => {
   });
 };
 
-//SEPET FONKSIYONLARI
+//SEPET AKSIYONLARI
 const CART_ITEMS_KEY = "cartItems";
 const CART_ITEM_COUNT_KEY = "cartItemCount";
 let cartItems = JSON.parse(localStorage.getItem(CART_ITEMS_KEY)) || [];
-let cartItemCount = parseInt(localStorage.getItem(CART_ITEM_COUNT_KEY)) || 0;
+let cartItemCount = parseInt(cartItems.length) || 0;
+
+const calculateSubtotal = (item) => {
+  const priceInt = parseInt(item.price.split("$")[1]);
+  return `${priceInt * item.quantity}`;
+};
+
+const calculateCartSubTotal = (cart) => {
+  let cartSubTotal = 0;
+  cart.forEach((item) => {
+    cartSubTotal += Number(calculateSubtotal(item));
+  });
+  return cartSubTotal;
+};
+
+const calculateCartTotal = (cart) => {
+  const cartSubTotal = calculateCartSubTotal(cart);
+  return `${cartSubTotal + (cart.length === 0 ? 0 : 10)}`;
+};
 
 const updateCartItemCount = (count) => {
   document.getElementById("cart-item-count").textContent = count;
@@ -359,14 +379,63 @@ const addToCart = () => {
     existingItem.quantity++;
   } else {
     cartItems.push(currentProduct);
+    cartItemCount++;
   }
 
   // Sepet sayısını ve localStorage'ı güncelle
-  cartItemCount++;
   saveCartToLocalStorage();
 
   // Sepet ikonundaki sayıyı güncelle
   updateCartItemCount(cartItemCount);
+};
+
+const getCartItems = () => {
+  tbodyCartItems.innerHTML = "";
+  cartItems.forEach((item) => {
+    tbodyCartItems.innerHTML += `
+    <tr id="${item.id}">
+    <td>
+      <a href="#"><i class="far fa-times-circle" onclick="removeCartItem(this)"></i></a>
+    </td>
+    <td><img src="${item.src}" /></td>
+    <td>${item.title}</td>
+    <td>${item.price}</td>
+    <td><input type="number" value="${item.quantity}" /></td>
+    <td>$${calculateSubtotal(item)}</td>
+  </tr>
+    `;
+  });
+};
+
+const removeCartItem = (el) => {
+  const productId = Number(el.parentElement.parentElement.parentElement.id);
+  const filteredProducts = cartItems.filter((item) => item.id !== productId);
+  cartItems = filteredProducts;
+  el.parentElement.parentElement.parentElement.remove();
+  cartItemCount--;
+  getCartTotalItems(cartItems);
+  saveCartToLocalStorage();
+  updateCartItemCount(cartItemCount);
+};
+
+const getCartTotalItems = (cart) => {
+  cartSubtotal.innerHTML = `
+  <h3>Cart Totals</h3>
+        <table>
+          <tr>
+            <td>Cart Subtotal</td>
+            <td>$${calculateCartSubTotal(cart)}</td>
+          </tr>
+          <tr>
+            <td>Shipping</td>
+            <td>$${cart.length === 0 ? 0 : 10}</td>
+          </tr>
+          <tr>
+            <td><strong>Total</strong></td>
+            <td><strong>$${calculateCartTotal(cart)}</strong></td>
+          </tr>
+        </table>
+        <button class="normal">Proceed to checkout</button>`;
 };
 
 //RUN
@@ -386,4 +455,9 @@ if (window.location.pathname === "/sproduct.html") {
 
 if (window.location.pathname === "/shop.html") {
   renderShopProducts();
+}
+
+if (window.location.pathname === "/cart.html") {
+  getCartItems();
+  getCartTotalItems(cartItems);
 }

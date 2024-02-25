@@ -269,53 +269,19 @@ header > a {
   color: var(--header-nav-text);
 }
 
-#feature .box-1 {
-  background-color: #f9c4c8;
-}
-
-#feature .box-2 {
-  background-color: #1f3252;
-  color: white;
-}
-
-#feature .box-2 h6 {
-  color: white;
-}
-
-#feature .box-3 {
-  background-color: var(--header-nav-text-hover);
-  color: lemonchiffon;
-}
-
-#feature .box-3 h6 {
-  color: lemonchiffon;
-}
-
-#feature .box-4 {
-  background-color: #efdecb;
-  color: chocolate;
-}
-
-#feature .box-4 h6 {
-  color: chocolate;
-}
-
+#feature .box-6,
+#feature .box-1,
+#feature .box-2,
 #feature .box-5 {
-  background-color: #911c37;
-  color: white;
+  background-color: var(--header-nav-text-hover);
+  color: rgb(235, 235, 236);
 }
 
+#feature .box-6 h6,
+#feature .box-1 h6,
+#feature .box-2 h6,
 #feature .box-5 h6 {
-  color: white;
-}
-
-#feature .box-6 {
-  background-color: #456084;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-#feature .box-6 h6 {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgb(235, 235, 236);
 }
 
 #product1,
