@@ -7,6 +7,7 @@ const products = [
     star: 5,
     src: "img/products/f1.jpg",
     isNew: false,
+    quantity: 1,
   },
   {
     id: 1,
@@ -16,6 +17,7 @@ const products = [
     star: 5,
     src: "img/products/f2.jpg",
     isNew: false,
+    quantity: 1,
   },
   {
     id: 2,
@@ -25,6 +27,7 @@ const products = [
     star: 5,
     src: "img/products/f3.jpg",
     isNew: false,
+    quantity: 1,
   },
   {
     id: 3,
@@ -34,6 +37,7 @@ const products = [
     star: 5,
     src: "img/products/f4.jpg",
     isNew: false,
+    quantity: 1,
   },
   {
     id: 4,
@@ -43,6 +47,7 @@ const products = [
     star: 5,
     src: "img/products/f5.jpg",
     isNew: false,
+    quantity: 1,
   },
   {
     id: 5,
@@ -52,6 +57,7 @@ const products = [
     star: 5,
     src: "img/products/f6.jpg",
     isNew: false,
+    quantity: 1,
   },
   {
     id: 6,
@@ -61,6 +67,7 @@ const products = [
     star: 5,
     src: "img/products/f7.jpg",
     isNew: false,
+    quantity: 1,
   },
   {
     id: 7,
@@ -70,6 +77,7 @@ const products = [
     star: 5,
     src: "img/products/f8.jpg",
     isNew: false,
+    quantity: 1,
   },
   {
     id: 8,
@@ -79,6 +87,7 @@ const products = [
     star: 5,
     src: "img/products/n1.jpg",
     isNew: true,
+    quantity: 1,
   },
   {
     id: 9,
@@ -88,6 +97,7 @@ const products = [
     star: 5,
     src: "img/products/n2.jpg",
     isNew: true,
+    quantity: 1,
   },
   {
     id: 10,
@@ -97,6 +107,7 @@ const products = [
     star: 5,
     src: "img/products/n3.jpg",
     isNew: true,
+    quantity: 1,
   },
   {
     id: 11,
@@ -106,6 +117,7 @@ const products = [
     star: 5,
     src: "img/products/n4.jpg",
     isNew: true,
+    quantity: 1,
   },
   {
     id: 12,
@@ -115,6 +127,7 @@ const products = [
     star: 5,
     src: "img/products/n5.jpg",
     isNew: true,
+    quantity: 1,
   },
   {
     id: 13,
@@ -124,6 +137,7 @@ const products = [
     star: 5,
     src: "img/products/n6.jpg",
     isNew: true,
+    quantity: 1,
   },
   {
     id: 14,
@@ -133,6 +147,7 @@ const products = [
     star: 5,
     src: "img/products/n7.jpg",
     isNew: true,
+    quantity: 1,
   },
   {
     id: 15,
@@ -142,6 +157,7 @@ const products = [
     star: 5,
     src: "img/products/n8.jpg",
     isNew: true,
+    quantity: 1,
   },
 ];
 
@@ -150,6 +166,7 @@ const featuredProductsSection = document.getElementById("featured-products");
 const newArrivalsSection = document.getElementById("new-arrivals");
 const proDetailsSection = document.getElementById("pro-details");
 const shopProductsSection = document.getElementById("shop-products");
+const productQ = document.getElementById("cart-length");
 
 function getRandomIndex(maxIndex) {
   return Math.floor(Math.random() * maxIndex);
@@ -256,7 +273,7 @@ const renderProDetails = () => {
   </select>
 
   <input type="number" value="1" />
-  <button class="normal">Add To Cart</button>
+  <button class="normal" onclick="addToCart()">Add To Cart</button>
   <h4>Product Details</h4>
   <span
     >The Gildan Ultra Cotton T-shirt is made from a substantial 6.0 oz.
@@ -313,7 +330,49 @@ const changeMainImg = () => {
   });
 };
 
-// RUN
+//SEPET FONKSIYONLARI
+const CART_ITEMS_KEY = "cartItems";
+const CART_ITEM_COUNT_KEY = "cartItemCount";
+let cartItems = JSON.parse(localStorage.getItem(CART_ITEMS_KEY)) || [];
+let cartItemCount = parseInt(localStorage.getItem(CART_ITEM_COUNT_KEY)) || 0;
+
+const updateCartItemCount = (count) => {
+  document.getElementById("cart-item-count").textContent = count;
+};
+const saveCartToLocalStorage = () => {
+  localStorage.setItem(CART_ITEMS_KEY, JSON.stringify(cartItems));
+  localStorage.setItem(CART_ITEM_COUNT_KEY, cartItemCount);
+};
+const addToCart = () => {
+  // localStorage'dan mevcut ürünü al
+
+  const currentProduct = JSON.parse(localStorage.getItem("current"));
+
+  // Eğer mevcut ürün yoksa işlemi durdur
+  if (!currentProduct) return;
+
+  // Sepette aynı ürün var mı kontrol et
+  const existingItem = cartItems.find((item) => item.id === currentProduct.id);
+
+  // Eğer sepette aynı ürün varsa miktarını artır, yoksa yeni bir öğe olarak ekle
+  if (existingItem) {
+    existingItem.quantity++;
+  } else {
+    cartItems.push(currentProduct);
+  }
+
+  // Sepet sayısını ve localStorage'ı güncelle
+  cartItemCount++;
+  saveCartToLocalStorage();
+
+  // Sepet ikonundaki sayıyı güncelle
+  updateCartItemCount(cartItemCount);
+};
+
+//RUN
+document.addEventListener("DOMContentLoaded", function () {
+  updateCartItemCount(cartItemCount);
+});
 
 if (window.location.pathname === "/index.html") {
   renderFeaturedProducts();
