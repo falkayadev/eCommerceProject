@@ -174,7 +174,7 @@ function getRandomIndex(maxIndex) {
   return Math.floor(Math.random() * maxIndex);
 }
 
-const renderFeaturedProducts = (arr = products) => {
+const renderFeaturedProducts = () => {
   const oldFashionProducts = products.filter(
     (product) => product.isNew === false
   );
@@ -201,14 +201,14 @@ const renderFeaturedProducts = (arr = products) => {
   });
 };
 
-const renderNewArrivals = (arr = products) => {
+const renderNewArrivals = () => {
   const newFashionProducts = products.filter(
     (product) => product.isNew === true
   );
 
   newFashionProducts.forEach((item) => {
     newArrivalsSection.innerHTML += `
-    <div class="pro" id="product-${item.id}">
+    <div class="pro" id="product-${item.id}" onclick="setCurrentProduct(this)">
           <img src="${item.src}" alt="fast product 1" />
           <div class="des">
             <span>adidas</span>
@@ -389,8 +389,8 @@ const addToCart = () => {
     existingItem.quantity++;
   } else {
     cartItems.push(currentProduct);
-    cartItemCount++;
   }
+  cartItemCount++;
 
   // Sepet sayısını ve localStorage'ı güncelle
   saveCartToLocalStorage();
