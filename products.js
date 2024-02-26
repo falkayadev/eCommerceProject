@@ -337,6 +337,7 @@ const CART_ITEMS_KEY = "cartItems";
 const CART_ITEM_COUNT_KEY = "cartItemCount";
 let cartItems = JSON.parse(localStorage.getItem(CART_ITEMS_KEY)) || [];
 let cartItemCount = parseInt(cartItems.length) || 0;
+const tableEl = document.querySelector("#cart table");
 
 const calculateSubtotal = (item) => {
   const priceInt = parseInt(item.price.split("$")[1]);
@@ -390,6 +391,9 @@ const addToCart = () => {
 };
 
 const getCartItems = () => {
+  if (cartItems.length === 0) {
+    tableEl.innerHTML = "";
+  }
   tbodyCartItems.innerHTML = "";
   cartItems.forEach((item) => {
     tbodyCartItems.innerHTML += `
@@ -413,6 +417,9 @@ const removeCartItem = (el) => {
   cartItems = filteredProducts;
   el.parentElement.parentElement.parentElement.remove();
   cartItemCount--;
+  if (cartItemCount === 0) {
+    getCartItems();
+  }
   getCartTotalItems(cartItems);
   saveCartToLocalStorage();
   updateCartItemCount(cartItemCount);
