@@ -82,6 +82,10 @@ button.outline {
   transition: 0.2s;
 }
 
+.hidden {
+  opacity: 0;
+}
+
 body {
   width: 100%;
 }

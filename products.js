@@ -358,7 +358,16 @@ const calculateCartTotal = (cart) => {
 };
 
 const updateCartItemCount = (count) => {
-  document.getElementById("cart-item-count").textContent = count;
+  if (cartItems.length === 0) {
+    document
+      .getElementById("cart-item-count")
+      .parentElement.classList.add("hidden");
+  } else {
+    document
+      .getElementById("cart-item-count")
+      .parentElement.classList.remove("hidden");
+    document.getElementById("cart-item-count").textContent = count;
+  }
 };
 const saveCartToLocalStorage = () => {
   localStorage.setItem(CART_ITEMS_KEY, JSON.stringify(cartItems));
